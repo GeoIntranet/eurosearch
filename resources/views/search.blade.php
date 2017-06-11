@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="col">
+<div class="col ">
     <div class="row">
         <div class="col-3">
             <div class="card">
@@ -27,12 +27,12 @@
 
         </div>
 
-        <div class="col-7">
+        <div class="col-7 " style="background-color: white; border-radius: 5px; padding: 10px">
             @if(isset($data) AND $data <> false)
                 <div class="row">
                     <div class="col">
                         <h3> <i class="fa fa-code mr-2"></i> la requette SQL</h3>
-                        <p class="lead"> <i class="fa fa-angle-right mr-2 b"> </i> C'est la requette qui est exécuté par le server afin de
+                        <p class=" mr-2"> <i class="fa fa-angle-right mr-2 b"> </i> C'est la requette qui est exécuté par le server afin de
                             rechercher les elements qui ont été écrit dans la zone de recherche.</p>
                     </div>
                 </div>
@@ -44,15 +44,8 @@
                         </div>
                     </div>
                 </div>
-                {{--<div class="row ml-2">--}}
-                    {{--<div class="col">--}}
-                        {{--<p class="small"><i class="fa fa-cog mr-2"> </i> Recherche de l'historique de recherche</p>--}}
-                        {{--<div class="alert alert-success" role="alert">--}}
-                            {{--<i class="fa fa-arrow-circle-o-right mr-2"> </i> {{$db[1]['query']}}--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                <hr>
+            
+                <br>
                 <div class="row ">
                     <div class="col" >
                         <h3 class=""> <i class="fa fa-send mr-2"></i> Votre recherche</h3>
