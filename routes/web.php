@@ -17,6 +17,8 @@ Route::get('/', function () {
 
 route::get('/search','SearchController@index')->name('getSearch');
 route::post('/search','SearchController@search')->name('postSearch');
+route::get('/search/delete','SearchController@deleteSearch')->name('deleteSearch');
+route::get('/search/delete/{id}','SearchController@deleteOneSearch')->name('deleteOneSearch');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
