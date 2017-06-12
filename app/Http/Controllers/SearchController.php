@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Articles;
 use App\Locator;
+use App\Marques;
 use App\Search;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Searcher;
@@ -25,30 +27,26 @@ class SearchController extends Controller
     public function index(Request $request)
     {
         $request->session()->reflash();
-        $data = false;
         $searchData = false;
-        $result=collect([]);
+        $data = false;
 
         if(session('data'))
         {
             $data = session('data');
-            $searchData = $this->searchData(session('data'));
+            $searchData = $this->search->handle(session('data'));
         }
 
+        if(empty($searchData)) $searchData = false;
         $searchs = Search::orderBy('created_at','DESC')->get() ;
-
         $db = DB::getQueryLog();
 
 
-
-        $responses=[
-            'data' =>$data,
-            'db' => $db,
-            'searchs' => $searchs,
-            'searchData' => $searchData,
-            'results' => $result,
-        ];
-
+       $responses=[
+           'data' =>$data,
+           'db' => $db,
+           'searchs' => $searchs,
+           'searchData' => $searchData,
+       ];
 
         return view('search',$responses);
     }
@@ -58,7 +56,6 @@ class SearchController extends Controller
      */
     public function search(Request $request)
     {
-
         $this->search->init($request);
 
         $request->session()->flash('data', $request->input('search'));
@@ -67,6 +64,10 @@ class SearchController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function deleteSearch( Request $request )
     {
         $request->session()->reflash();
@@ -75,6 +76,22 @@ class SearchController extends Controller
         return redirect()->back();
     }
 
+    public function getMarque()
+    {
+        $articles = Articles::select('art_marque')->distinct()->pluck('art_marque');
+        foreach ($articles as $index => $article) {
+            Marques::create(
+                ['marque' => $article]
+            );
+        }
+        dump($articles);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function deleteOneSearch(Request $request , $id)
     {
         $request->session()->reflash();
@@ -83,70 +100,5 @@ class SearchController extends Controller
         return redirect()->back();
     }
 
-    private function searchData($request)
-    {
-        $keywords_string = str_replace('-',' ',strtoupper($request));
-        $keywords_string = str_replace('+',' ',$keywords_string);
-        $keywords_array = explode(' ',$keywords_string);
 
-        if ( sizeof($keywords_array) == 1 )
-        {
-            preg_match_all('#[0-9]+#',$keywords_string,$extractInt);
-            preg_match_all('#[A-Z]+#',$keywords_string,$extractString);
-
-            //jamais valider : strtoupper($request) / mise en majuscule de la chaine de char
-            //preg_match_all('#[a-z]+#',$keywords_string,$extractString);
-
-            // throw exeception , on accede pas a une valeur qui n'existe pas.
-            //$int = $extractInt[0][0];
-            //$string = $extractString[0][0];
-
-            if (isset($extractInt[0][0]) && isset($extractString[0][0]))
-            {
-                $int = $extractInt[0][0];
-                $string = $extractString[0][0];
-
-                $keywords_string = $string.' '.$int;
-                $keywords_array = explode(' ',$keywords_string);
-            }
-            else
-                {
-                $keywords_array = $keywords_array;
-            }
-        }
-
-        $where = '';
-
-        $i = 0;
-        foreach ($keywords_array as $key=>$value){
-            $value = strtolower($value);
-            if ($i == 0)
-                $where .= "LOWER(pm.search) LIKE '%$value%' OR LOWER(pm.references) LIKE '%$value%'";
-            else
-                $where .= "AND (LOWER(pm.search) LIKE '%$value%' OR LOWER(pm.references) LIKE '%$value%' )";
-            $i++;
-        }
-
-        $sql_products = "
-		SELECT
-		p.id as id_product,
-		pm.title,
-		pm.text
-		FROM
-		products p
-		INNER JOIN products_multilingual pm ON pm.id_product = p.id
-		WHERE
-		p.id is not null
-		AND ($where)
-		AND id_language = 1
-		GROUP BY p.id
-		";
-        return [
-            'where' => $where,
-            'sql' => $sql_products,
-            'data' => $keywords_array
-        ];
-
-
-    }
 }

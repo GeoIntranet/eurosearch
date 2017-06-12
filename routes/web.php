@@ -19,6 +19,7 @@ route::get('/search','SearchController@index')->name('getSearch');
 route::post('/search','SearchController@search')->name('postSearch');
 route::get('/search/delete','SearchController@deleteSearch')->name('deleteSearch');
 route::get('/search/delete/{id}','SearchController@deleteOneSearch')->name('deleteOneSearch');
+route::get('/articles','SearchController@addMarque')->name('getArticles');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
