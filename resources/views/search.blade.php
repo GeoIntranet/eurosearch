@@ -47,6 +47,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row ml-2">
                         <div class="col">
                             <p class="small"><i class="fa fa-cog mr-2"> </i> Condition</p>
@@ -66,6 +67,10 @@
                         </div>
                     </div>
                 @endif
+
+                </div>
+
+
                 <br>
                 <div class="row ">
                     <div class="col" >
