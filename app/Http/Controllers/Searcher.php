@@ -21,10 +21,15 @@ class Searcher{
     {
         $this->request = $request ;
 
-        $this->search->forceCreate([
-            'data' => $request->input('search'),
-            'count_result' => 1,
-        ]);
+        if($request->input('search') <> null){
+            $this->search->forceCreate([
+                'data' => $request->input('search'),
+                'count_result' => 1,
+            ]);
+        }
+
+
+
     }
 
     public function search()

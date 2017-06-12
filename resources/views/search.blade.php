@@ -3,7 +3,7 @@
 @section('content')
 <div class="col ">
     <div class="row">
-        <div class="col-3">
+        <div class="col-4">
             <div class="card">
                 <h3 class="card-header"><i class="fa fa-clock-o mr-2"></i> Historique recherche</h3>
                 <div class="card-block">
@@ -13,10 +13,10 @@
                         @foreach($searchs as $search)
                             <li>
                                 <b>{{$search->data}}</b>  &ndash; <small>{{$search->created_at->format('D d M Y')}} </small>
-                                &ndash;
-                                résultat trouvé
+                                {{--&ndash;--}}
+                                {{--résultat trouvé--}}
 
-                                <span class="badge badge-pill badge-default mr-2">0</span>
+                                {{--<span class="badge badge-pill badge-default mr-2">0</span>--}}
 
                                 <a href="{{route('deleteOneSearch',['id'=>$search->id])}}" class=" ml-2 text-danger"><i class="fa fa-trash"></i></a>
                             </li>
@@ -36,15 +36,36 @@
                             rechercher les elements qui ont été écrit dans la zone de recherche.</p>
                     </div>
                 </div>
-                <div class="row ml-2">
-                    <div class="col">
-                        <p class="small"><i class="fa fa-cog mr-2"> </i> Recherche des articles du locator</p>
-                        <div class="alert alert-success" role="alert">
-                            <i class="fa fa-arrow-circle-o-right mr-2"> </i> {{$db[0]['query']}}
+                @if($searchData <> false)
+                    <div class="row ml-2">
+                        <div class="col">
+                            <p class="small"><i class="fa fa-cog mr-2"> </i> Requette complète</p>
+                            <div class="alert alert-danger" role="alert">
+                                <i class="fa fa-arrow-circle-o-right mr-2"> </i>
+
+                                {!!  $searchData['sql'] !!}
+                            </div>
                         </div>
                     </div>
-                </div>
-            
+                    <div class="row ml-2">
+                        <div class="col">
+                            <p class="small"><i class="fa fa-cog mr-2"> </i> Condition</p>
+                            <div class="alert alert-danger" role="alert">
+                                <i class="fa fa-arrow-circle-o-right mr-2"> </i> {{$searchData['where']}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ml-2">
+                        <div class="col">
+                            <p class="small"><i class="fa fa-cog mr-2"> </i> Données</p>
+                            <div class="alert alert-danger" role="alert">
+                                @foreach($searchData['data'] as  $item)
+                                    <i class="fa fa-angle-right mr-2"> </i> {{$item}} <br>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 <br>
                 <div class="row ">
                     <div class="col" >
