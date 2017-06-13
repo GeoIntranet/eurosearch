@@ -56,6 +56,7 @@ class SearchController extends Controller
      */
     public function search(Request $request)
     {
+
         $this->search->init($request);
 
         $request->session()->flash('data', $request->input('search'));
@@ -100,5 +101,8 @@ class SearchController extends Controller
         return redirect()->back();
     }
 
-
+    public function testModel()
+    {
+        
+    }
 }
